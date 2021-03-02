@@ -1,0 +1,54 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: astrom-gateway-jwt
+  cloud:
+    consul:
+      discovery:
+        register: false
+        register-health-check: false
+      config:
+        enabled: false
+      host: localhost
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: authors-service
+          uri: lb://authors-service
+          predicates:
+            - Path=/getauthors/**
+          filters:
+            - RewritePath=/getauthors(?<path>.*), /authors/$\{path}
+            - name: Retry
+              args:
+                retries: 5
+                statuses: BAD_GATEWAY, BAD_REQUEST
+                methods: GET,POST
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: false
+        - id: books-service
+          uri: lb://books-service
+          predicates:
+            - Path=/getbooks/**
+          filters:
+            - RewritePath=/getbooks(?<path>.*), /books/$\{path}
+        - id: auth
+          uri: http://localhost:8085
+          predicates:
+            - Path=/auth/**
+            - Method=POST
+          filters:
+            - RewritePath=/auth(?<path>.*), /auth/$\{path}
+        - id: sign-up
+          uri: http://localhost:8085
+          predicates:
+            - Path=/sign-up/**
+            - Method=POST
+          filters:
+            - RewritePath=/sign-up/(?<path>.*), /sign-up/$\{path}
