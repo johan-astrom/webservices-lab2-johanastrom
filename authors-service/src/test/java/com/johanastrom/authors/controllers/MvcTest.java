@@ -165,7 +165,6 @@ public class MvcTest {
                 .andExpect(status().isNotFound());
     }
 
-    // TODO: 2021-03-03 Färdigställ
     @Test
     public void callingDeleteWithInvalidIdShouldGenerateHttpStatusNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/authors/{id}", "2")
