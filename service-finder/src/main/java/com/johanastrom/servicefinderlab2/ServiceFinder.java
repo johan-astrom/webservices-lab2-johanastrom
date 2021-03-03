@@ -1,5 +1,6 @@
 package com.johanastrom.servicefinderlab2;
 
+import com.johanastrom.servicefinderlab2.services.BookOrderIntermediary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -21,11 +22,18 @@ import java.util.List;
 @RestController
 public class ServiceFinder {
 
-    @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
     private RestTemplate restTemplateWithoutLoadBalancing;
+
+    private BookOrderIntermediary service;
+
+    @Autowired
+    public ServiceFinder(RestTemplate restTemplate, RestTemplate restTemplateWithoutLoadBalancing, BookOrderIntermediary service) {
+        this.restTemplateWithoutLoadBalancing = restTemplateWithoutLoadBalancing;
+        this.service = service;
+        this.restTemplate=restTemplate;
+    }
 
     @Retryable(value = RuntimeException.class, maxAttempts = 4, backoff = @Backoff(value = 100))
     @GetMapping("/find-authors")
@@ -40,35 +48,12 @@ public class ServiceFinder {
 
     @GetMapping("/books-ordered")
     public List<BookOrdered> findBooksOrdered() {
-        Book[] books = this.restTemplate.getForObject("http://books-service/books", Book[].class);
-        Embedded orders = this.restTemplate.getForObject("http://orders-service/orders", Embedded.class);
-        List<BookOrdered> booksOrdered = new ArrayList<>();
-        for (Order order : orders.get_embedded().getOrders()) {
-            for (Book book : books) {
-                if (book.getIsbn13().equals(order.getIsbn13())) {
-                    booksOrdered.add(new BookOrdered(book.getIsbn13(), book.getTitle(), book.getPrice(),
-                            order.getOrderDate(), order.getShippingDate()));
-                }
-            }
-        }
-        return booksOrdered;
+        return this.service.findBooksOrdered();
     }
 
     @GetMapping("/the-weather-in-arvidsjaur")
     public String findWeather() {
         return this.restTemplateWithoutLoadBalancing.getForObject("https://opendata-download-metobs.smhi.se/api/version/1.0/parameter/1/station/159880.json", String.class);
-    }
-
-
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.setConnectTimeout(Duration.ofSeconds(3)).setReadTimeout(Duration.ofSeconds(10)).build();
-    }
-
-    @Bean
-    public RestTemplate restTemplateWithoutLoadBalancing(RestTemplateBuilder builder) {
-        return builder.setConnectTimeout(Duration.ofSeconds(3)).setReadTimeout(Duration.ofSeconds(10)).build();
     }
 
 }
