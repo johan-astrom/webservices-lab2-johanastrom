@@ -12,6 +12,9 @@ spring:
         enabled: false
       host: localhost
     gateway:
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 5s
       discovery:
         locator:
           enabled: true
@@ -24,9 +27,9 @@ spring:
             - RewritePath=/getauthors(?<path>.*), /authors/$\{path}
             - name: Retry
               args:
-                retries: 5
+                retries: 6
                 statuses: BAD_GATEWAY, BAD_REQUEST
-                methods: GET,POST
+                methods: GET,POST, PUT, PATCH, DELETE
                 backoff:
                   firstBackoff: 10ms
                   maxBackoff: 50ms
@@ -38,6 +41,16 @@ spring:
             - Path=/getbooks/**
           filters:
             - RewritePath=/getbooks(?<path>.*), /books/$\{path}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, BAD_REQUEST
+                methods: GET,POST, PUT, PATCH, DELETE
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: false
         - id: auth
           uri: http://localhost:8085
           predicates:
