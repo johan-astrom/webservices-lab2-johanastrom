@@ -2,6 +2,7 @@ package com.johanastrom.authors.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johanastrom.authors.configurations.JohansConfig;
+import com.johanastrom.authors.dtos.AuthorPersonalData;
 import com.johanastrom.authors.dtos.AuthorRecord;
 import com.johanastrom.authors.services.IntermediaryService;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
 public class MvcTest {
@@ -39,7 +40,7 @@ public class MvcTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void callingWithURLAuhtorsPlusIDShouldReturnJSONWithOneAuthorRecord() throws Exception {
+    public void callingWithURLAuthorsPlusIDShouldReturnJSONWithOneAuthorRecord() throws Exception {
         when(service.getOneAuthor(1)).thenReturn(Optional.of(
                 new AuthorRecord(1, "test", "test", new Timestamp(1000))));
         var result = mockMvc.perform(MockMvcRequestBuilders.get("/authors/1")
@@ -64,7 +65,8 @@ public class MvcTest {
     public void callingWithURLAuthorsPlusSearchAndURLParametersShouldReturnJSONListOfAuthorRecords() throws Exception{
         when(service.getByLastName("Test")).thenReturn(List.of(
                 new AuthorRecord(1, "Test", "Test", new Timestamp(1000))));
-        var result=mockMvc.perform(MockMvcRequestBuilders.get("/authors/search?lastName=Test")
+        var result=mockMvc.perform(MockMvcRequestBuilders.get("/authors")
+                .param("lastName", "Test")
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn();
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
@@ -87,20 +89,44 @@ public class MvcTest {
 
     }
 
-    // TODO: 2021-03-02 Lös denna
     @Test
     public void putRequestShouldGenerateJSONOfAuthorRecordObject() throws Exception{
         var author = new AuthorRecord(1, "Test", "Test", new Timestamp(1000));
-        when(service.replace(1, any(AuthorRecord.class)))
+        when(service.replace(any(Integer.class), any(AuthorRecord.class)))
                 .thenReturn(Optional.of(author));
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/authors")
+                .put("/authors/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(author)))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Test")))
                 .andExpect(jsonPath("$.id", is(1)));
-
     }
+
+    @Test
+    public void patchRequestShouldGenerateJSONOfAuthorRecordObject() throws Exception{
+        var author = new AuthorRecord(1, "Test", "Test", new Timestamp(1000));
+        var authorData = new AuthorPersonalData("Test", "Test", new Timestamp(1000));
+        when(service.update(any(Integer.class), any(AuthorPersonalData.class)))
+                .thenReturn(Optional.of(author));
+        mockMvc.perform(MockMvcRequestBuilders
+                .patch("/authors/{id}", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(authorData)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", is("Test")))
+                .andExpect(jsonPath("$.id", is(1)));
+    }
+
+    @Test
+    public void deleteRequestShouldGenerateHttpStatusOK() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.delete("/authors/{id}", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
 }
