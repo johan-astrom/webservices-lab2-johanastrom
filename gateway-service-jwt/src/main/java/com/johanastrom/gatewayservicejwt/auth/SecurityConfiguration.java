@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                 .pathMatchers("/sign-up/**").permitAll()
                 .pathMatchers(HttpMethod.GET, "/getauthors/**").hasAnyRole("USER", "ADMIN")
                 .pathMatchers(HttpMethod.GET, "/getbooks/**").hasAnyRole("USER", "ADMIN")
+                .pathMatchers(HttpMethod.GET, "/getservice/**").hasAnyRole("USER", "ADMIN")
                 .anyExchange().hasRole("ADMIN")
                 .and().build();
     }

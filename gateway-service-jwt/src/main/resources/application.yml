@@ -1,5 +1,5 @@
 server:
-  port: 8086
+  port: 8080
 spring:
   application:
     name: astrom-gateway-jwt
@@ -27,7 +27,7 @@ spring:
             - RewritePath=/getauthors(?<path>.*), /authors/$\{path}
             - name: Retry
               args:
-                retries: 6
+                retries: 3
                 statuses: BAD_GATEWAY, BAD_REQUEST
                 methods: GET,POST, PUT, PATCH, DELETE
                 backoff:
@@ -65,3 +65,19 @@ spring:
             - Method=POST
           filters:
             - RewritePath=/sign-up/(?<path>.*), /sign-up/$\{path}
+        - id: service-finder
+          uri: lb://service-finder
+          predicates:
+            - Path=/getservice/**
+          filters:
+            - RewritePath=/getservice(?<path>.*), /getservice/$\{path}
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, BAD_REQUEST
+                methods: GET,POST, PUT, PATCH, DELETE
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: false
