@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.johanastrom</groupId>
 	<artifactId>authors-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>authors-service</name>
 	<description>View authors info from a database</description>
 	<properties>

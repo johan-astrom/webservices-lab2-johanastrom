@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.johanastrom</groupId>
     <artifactId>gateway-service-jwt</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>gateway-service-jwt</name>
     <description>A gateway handling JWT:s</description>
     <properties>
