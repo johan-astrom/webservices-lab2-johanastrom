@@ -1,4 +1,4 @@
-package com.johanastrom.servicefinderlab2;
+package com.johanastrom.servicefinderlab2.dtos;
 
 import java.sql.Timestamp;
 

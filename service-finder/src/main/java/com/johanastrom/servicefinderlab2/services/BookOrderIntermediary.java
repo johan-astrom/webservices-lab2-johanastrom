@@ -1,17 +1,14 @@
 package com.johanastrom.servicefinderlab2.services;
 
-import com.johanastrom.servicefinderlab2.Book;
-import com.johanastrom.servicefinderlab2.BookOrdered;
-import com.johanastrom.servicefinderlab2.Embedded;
-import com.johanastrom.servicefinderlab2.Order;
+import com.johanastrom.servicefinderlab2.dtos.Book;
+import com.johanastrom.servicefinderlab2.dtos.BookOrdered;
+import com.johanastrom.servicefinderlab2.dtos.Embedded;
+import com.johanastrom.servicefinderlab2.dtos.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.johanastrom.servicefinderlab2.dtos.Embedded;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 

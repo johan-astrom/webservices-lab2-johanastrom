@@ -1,11 +1,8 @@
 package com.johanastrom.servicefinderlab2;
 
+import com.johanastrom.servicefinderlab2.dtos.BookOrdered;
 import com.johanastrom.servicefinderlab2.services.BookOrderIntermediary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
@@ -14,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @EnableRetry
@@ -56,6 +50,11 @@ public class ServiceFinder {
     @GetMapping("/the-weather-in-arvidsjaur")
     public String findWeather() {
         return this.restTemplateWithoutLoadBalancing.getForObject("https://opendata-download-metobs.smhi.se/api/version/1.0/parameter/1/station/159880.json", String.class);
+    }
+
+    @GetMapping("/cat-facts")
+    public String findCatFacts(){
+        return this.restTemplateWithoutLoadBalancing.getForObject("https://cat-fact.herokuapp.com/facts", String.class);
     }
 
 }

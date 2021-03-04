@@ -1,4 +1,4 @@
-package com.johanastrom.servicefinderlab2;
+package com.johanastrom.servicefinderlab2.dtos;
 
 public class Embedded {
 

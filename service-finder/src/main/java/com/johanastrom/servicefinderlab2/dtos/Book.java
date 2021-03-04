@@ -1,5 +1,5 @@
 
-package com.johanastrom.servicefinderlab2;
+package com.johanastrom.servicefinderlab2.dtos;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
