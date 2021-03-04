@@ -1,7 +1,7 @@
-package com.johanastrom.servicefinderlab2;
+package com.johanastrom.servicefinder;
 
-import com.johanastrom.servicefinderlab2.dtos.BookOrdered;
-import com.johanastrom.servicefinderlab2.services.BookOrderIntermediary;
+import com.johanastrom.servicefinder.dtos.BookOrdered;
+import com.johanastrom.servicefinder.services.BookOrderIntermediary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.EnableRetry;

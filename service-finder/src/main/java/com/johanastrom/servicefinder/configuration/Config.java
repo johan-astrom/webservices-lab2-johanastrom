@@ -1,4 +1,4 @@
-package com.johanastrom.servicefinderlab2.configuration;
+package com.johanastrom.servicefinder.configuration;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;

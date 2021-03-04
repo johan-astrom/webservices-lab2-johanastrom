@@ -1,13 +1,12 @@
-package com.johanastrom.servicefinderlab2.services;
+package com.johanastrom.servicefinder.services;
 
-import com.johanastrom.servicefinderlab2.dtos.Book;
-import com.johanastrom.servicefinderlab2.dtos.BookOrdered;
-import com.johanastrom.servicefinderlab2.dtos.Embedded;
-import com.johanastrom.servicefinderlab2.dtos.Order;
+import com.johanastrom.servicefinder.dtos.Order;
+import com.johanastrom.servicefinder.dtos.Book;
+import com.johanastrom.servicefinder.dtos.BookOrdered;
+import com.johanastrom.servicefinder.dtos.Embedded;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.johanastrom.servicefinderlab2.dtos.Embedded;
 
 import java.util.ArrayList;
 import java.util.List;

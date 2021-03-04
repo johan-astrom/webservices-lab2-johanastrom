@@ -1,4 +1,4 @@
-package com.johanastrom.servicefinderlab2.dtos;
+package com.johanastrom.servicefinder.dtos;
 
 import java.util.ArrayList;
 import java.util.List;

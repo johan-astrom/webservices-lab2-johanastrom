@@ -1,4 +1,4 @@
-package com.johanastrom.servicefinderlab2;
+package com.johanastrom.servicefinder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
